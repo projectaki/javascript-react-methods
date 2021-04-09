@@ -1,10 +1,22 @@
+import { useEffect } from "react";
 import "./App.css";
-import PrefixTree from "./PrefixTree/PrefixTree";
 
 function App() {
+  useEffect(() => {}, []);
+
   return (
     <>
-      <PrefixTree />
+      <form>
+        <input
+          type="search"
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate (-50%, -50%)",
+          }}
+        ></input>
+      </form>
     </>
   );
 }
