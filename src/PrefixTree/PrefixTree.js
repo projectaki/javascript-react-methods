@@ -6,36 +6,40 @@ class Node {
     this.passed = "";
   }
 }
-export const PrefixTree = () => {
-  const root = new Node();
+export class PrefixTree {
+  constructor() {
+    this.root = new Node();
+  }
 
   // recursively add a word to the prefix tree
-  const addWord = (word) => {
-    addWordRec(word, root, 0);
-  };
+  addWord(word) {
+    this.addWordRec(word, this.root, 0);
+  }
 
   // recurse add helper method
-  const addWordRec = (word, node, index) => {
+  addWordRec = (word, node, index) => {
     // word is inserted, we are done
     if (word.length === index) {
       return;
     }
     // if children contains the letter, then continue adding the word
     if (node.children.has(word.charAt(index))) {
-      addWordRec(word, node.children.get(word.charAt(index)), index + 1);
+      if (index === word.length - 1)
+        node.children.get(word.charAt(index)).isWord = true;
+      this.addWordRec(word, node.children.get(word.charAt(index)), index + 1);
     } else {
       const toInsert = new Node();
       toInsert.value = word.charAt(index);
       if (index === word.length - 1) toInsert.isWord = true;
       node.children.set(word.charAt(index), toInsert);
 
-      addWordRec(word, node.children.get(word.charAt(index)), index + 1);
+      this.addWordRec(word, node.children.get(word.charAt(index)), index + 1);
     }
   };
 
-  const listPossibilities = (prefix) => {
+  listPossibilities = (prefix) => {
     if (prefix === "") return [];
-    const searchStartNode = _getNodeAtEndOfPrefix(prefix);
+    const searchStartNode = this._getNodeAtEndOfPrefix(prefix);
     const listOfWords = [];
     if (searchStartNode !== null) {
       searchStartNode.passed = prefix.substring(0, prefix.length - 1);
@@ -57,18 +61,22 @@ export const PrefixTree = () => {
     return listOfWords;
   };
 
-  const _getNodeAtEndOfPrefix = (prefix) => {
-    const val = _getNodeAtEndOfPrefixRec(prefix, root, 0);
+  _getNodeAtEndOfPrefix = (prefix) => {
+    const val = this._getNodeAtEndOfPrefixRec(prefix, this.root, 0);
     return val;
   };
-  const _getNodeAtEndOfPrefixRec = (prefix, node, index) => {
+  _getNodeAtEndOfPrefixRec = (prefix, node, index) => {
     if (index === prefix.length) return node;
     const currentChar = prefix.charAt(index);
-    if (!node.children.has(currentChar)) return null;
-    return _getNodeAtEndOfPrefixRec(
-      prefix,
-      node.children.get(currentChar),
-      index + 1
-    );
+
+    const lower = currentChar.toLowerCase();
+    const upper = currentChar.toUpperCase();
+
+    if (node.children.has(lower) || node.children.has(upper)) {
+      const res = node.children.get(lower) || node.children.get(upper);
+      return this._getNodeAtEndOfPrefixRec(prefix, res, index + 1);
+    } else {
+      return null;
+    }
   };
-};
+}

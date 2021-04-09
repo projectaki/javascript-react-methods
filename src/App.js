@@ -1,8 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+import { PrefixTree } from "./PrefixTree/PrefixTree";
+import data from "./topmovies.json";
 
 function App() {
-  useEffect(() => {}, []);
+  const [results, setResults] = useState([]);
+
+  useEffect(() => {
+    const pT = new PrefixTree();
+    for (let item of data) {
+      pT.addWord(item);
+    }
+    const res = pT.listPossibilities("gabriel");
+    console.log(res);
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(results);
+  // }, [results]);
 
   return (
     <>
