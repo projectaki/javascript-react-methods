@@ -37,23 +37,25 @@ export class PrefixTree {
     }
   };
 
-  listPossibilities = (prefix) => {
+  listPossibilities = (prefix, k = 15) => {
     if (prefix === "") return [];
     const searchStartNode = this._getNodeAtEndOfPrefix(prefix);
+
     const listOfWords = [];
     if (searchStartNode !== null) {
-      searchStartNode.passed = prefix.substring(0, prefix.length - 1);
+      // searchStartNode.passed = prefix.substring(0, prefix.length - 1);
 
       const queue = [];
       queue.push(searchStartNode);
       while (queue.length !== 0) {
         const currentNode = queue.shift();
-        const wordSoFar = currentNode.passed + currentNode.value;
+        const wordSoFar = currentNode.passed;
         if (currentNode.isWord) listOfWords.push(wordSoFar);
+        if (listOfWords.length === k) return listOfWords; // stop searching after k hits for optimisation
         const children = currentNode.children;
 
         children.forEach((x) => {
-          x.passed = wordSoFar;
+          x.passed = wordSoFar + x.value;
           queue.push(x);
         });
       }
@@ -65,6 +67,7 @@ export class PrefixTree {
     const val = this._getNodeAtEndOfPrefixRec(prefix, this.root, 0);
     return val;
   };
+
   _getNodeAtEndOfPrefixRec = (prefix, node, index) => {
     if (index === prefix.length) return node;
     const currentChar = prefix.charAt(index);
@@ -74,6 +77,7 @@ export class PrefixTree {
 
     if (node.children.has(lower) || node.children.has(upper)) {
       const res = node.children.get(lower) || node.children.get(upper);
+      res.passed = node.passed + res.value;
       return this._getNodeAtEndOfPrefixRec(prefix, res, index + 1);
     } else {
       return null;

@@ -11,13 +11,13 @@ function App() {
     for (let item of data) {
       pT.addWord(item);
     }
-    const res = pT.listPossibilities("gabriel");
-    console.log(res);
+    const res = pT.listPossibilities("gab", 10);
+    setResults(res);
   }, []);
 
-  // useEffect(() => {
-  //   console.log(results);
-  // }, [results]);
+  useEffect(() => {
+    results.length !== 0 && console.log(results);
+  }, [results]);
 
   return (
     <>
