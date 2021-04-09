@@ -1,11 +1,10 @@
-import './App.css';
-import Page from './Library/Page';
-import SetMethods from './Sets/SetMethods';
+import "./App.css";
+import PrefixTree from "./PrefixTree/PrefixTree";
 
 function App() {
   return (
     <>
-      <Page/>
+      <PrefixTree />
     </>
   );
 }
